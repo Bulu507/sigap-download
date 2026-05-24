@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unduh SIGAP - Sistem Integrasi Gaji dan Penghasilan Pegawai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --panel-2: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --green: #2ea043;
+      --green-light: #3fb950;
+      --green-soft: #0d2818;
+      --blue: #1f6feb;
+      --blue-soft: #0c1929;
+      --amber: #d29922;
+      --amber-soft: #272115;
+      --mono: "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+      --sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse 80% 48% at 50% -10%, rgba(46, 160, 67, .13), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .38;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 40L40 0M-5 5L5 -5M35 45L45 35' stroke='%2330363d' stroke-width='.45'/%3E%3C/svg%3E");
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(920px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      border-bottom: 1px solid var(--border);
+      background: rgba(13, 17, 23, .72);
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 0;
+    }
+
+    .logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--green);
+      font-weight: 800;
+      letter-spacing: -.04em;
+      flex: 0 0 auto;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .live {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(46, 160, 67, .35);
+      background: var(--green-soft);
+      color: var(--green-light);
+      border-radius: 999px;
+      padding: 4px 11px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .live i {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--green-light);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .45; transform: scale(.78); }
+    }
+
+    .hero {
+      padding: 72px 0 54px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 26px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      padding: 5px 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(34px, 6vw, 54px);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+
+    .hero h1 span { color: var(--green-light); }
+
+    .hero p {
+      max-width: 590px;
+      margin: 20px auto 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .download-card,
+    .info-card,
+    .notice,
+    .url-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .download-card {
+      overflow: hidden;
+      transition: border-color .18s ease, transform .18s ease;
+    }
+
+    .download-card:hover {
+      border-color: rgba(63, 185, 80, .72);
+      transform: translateY(-1px);
+    }
+
+    .download-main {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 26px 30px;
+    }
+
+    .download-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--green-soft);
+      border: 1px solid rgba(46, 160, 67, .3);
+      color: var(--green-light);
+      flex: 0 0 auto;
+    }
+
+    .download-icon svg { width: 26px; height: 26px; }
+
+    .download-title {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .download-title strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag {
+      border: 1px solid rgba(31, 111, 235, .35);
+      background: var(--blue-soft);
+      color: #79c0ff;
+      border-radius: 7px;
+      padding: 2px 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 11px 20px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .16s ease, border-color .16s ease, transform .12s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button:active { transform: translateY(0); }
+
+    .button-primary {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .button-primary:hover { background: var(--green-light); }
+
+    .button-ghost {
+      background: var(--panel-2);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .download-foot {
+      display: grid;
+      grid-template-columns: repeat(3, auto) minmax(0, 1fr);
+      gap: 14px 20px;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding: 13px 30px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .checksum {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .checksum-value {
+      max-width: 230px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .copy {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--panel-2);
+      color: var(--muted);
+      padding: 4px 9px;
+      font-family: var(--sans);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .copy:hover { color: var(--text); }
+
+    .url-card {
+      margin-top: 16px;
+      padding: 20px 24px;
+    }
+
+    .url-card h2 {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .url-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--bg);
+      padding: 10px 13px;
+      color: #79c0ff;
+      font-family: var(--mono);
+      font-size: 12px;
+      overflow-x: auto;
+    }
+
+    .url-row span {
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    .hint {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section {
+      margin-top: 42px;
+    }
+
+    .section h2 {
+      margin: 0 0 4px;
+      font-size: 21px;
+      letter-spacing: -.02em;
+    }
+
+    .section > p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .step {
+      min-height: 188px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      padding: 20px;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      border: 1px solid rgba(46, 160, 67, .32);
+      border-radius: 8px;
+      background: var(--green-soft);
+      color: var(--green-light);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 7px;
+      font-size: 14px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    code {
+      border-radius: 4px;
+      background: var(--panel-2);
+      padding: 1px 5px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .notice {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      padding: 20px 24px;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .notice p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .notice-amber {
+      border-color: rgba(210, 153, 34, .28);
+      background: var(--amber-soft);
+    }
+
+    .notice-blue {
+      border-color: rgba(31, 111, 235, .28);
+      background: var(--blue-soft);
+    }
+
+    .notice-amber p { color: #c9a227; }
+    .notice-blue p { color: #79c0ff; }
+
+    .notice-icon {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      background: rgba(255, 255, 255, .04);
+    }
+
+    .offline-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .offline-list div {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .offline-list b {
+      min-width: 24px;
+      padding: 0 7px;
+      border-radius: 5px;
+      background: rgba(210, 153, 34, .15);
+      color: var(--amber);
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 52px;
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 5;
+      transform: translateY(80px);
+      opacity: 0;
+      border: 1px solid rgba(46, 160, 67, .55);
+      border-radius: 9px;
+      background: var(--panel);
+      color: var(--green-light);
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: opacity .22s ease, transform .22s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 32px, 920px); }
+      .hero { padding-top: 56px; }
+      .topbar-inner { flex-wrap: wrap; }
+      .live { margin-left: 0; }
+      .download-main { flex-direction: column; align-items: flex-start; }
+      .button { width: 100%; }
+      .download-foot { grid-template-columns: 1fr; }
+      .checksum { justify-self: start; }
+      .steps { grid-template-columns: 1fr; }
+      .notice { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="logo" aria-hidden="true">S</div>
+      <div class="brand">SIGAP <span>/ Unduh Aplikasi</span></div>
+      <div class="live"><i aria-hidden="true"></i><span id="nav-version">Memuat...</span></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Sistem Integrasi Gaji dan Penghasilan Pegawai</div>
+      <h1>Unduh <span>SIGAP</span><br />untuk Windows</h1>
+      <p>Aplikasi pengelolaan data gaji dan dokumen penghasilan pegawai yang berjalan lokal, bisa digunakan offline, dan dapat diperbarui lewat GitHub Releases.</p>
+    </section>
+
+    <section class="download-card" aria-labelledby="download-title">
+      <div class="download-main">
+        <div class="download-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <path d="M7 10l5 5 5-5" />
+            <path d="M12 15V3" />
+          </svg>
+        </div>
+        <div class="download-title">
+          <strong id="download-title">SIGAP untuk Windows</strong>
+          <div class="meta">
+            <span class="tag" id="version-tag">v-.--.--</span>
+            <span>Windows 10 / 11</span>
+            <span>64-bit</span>
+            <span id="file-size">Memuat...</span>
+          </div>
+        </div>
+        <a id="btn-download" class="button button-primary" href="#" download>Unduh Sekarang</a>
+      </div>
+      <div class="download-foot">
+        <span>Installer resmi rilis GitHub</span>
+        <span>Update aplikasi tidak menyentuh data lokal</span>
+        <span id="release-date">Tanggal rilis belum dimuat</span>
+        <div class="checksum">
+          SHA-512: <span class="checksum-value" id="checksum" title="Klik untuk menyalin">-</span>
+          <button class="copy" type="button" onclick="copyChecksum()">Salin</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="url-card" aria-labelledby="permanent-title">
+      <h2 id="permanent-title">URL Unduhan Permanen</h2>
+      <div class="url-row">
+        <span id="permanent-url"></span>
+        <button class="copy" type="button" onclick="copyUrl()">Salin URL</button>
+      </div>
+      <p class="hint">URL ini selalu mengarah ke aset installer terbaru. Cocok dibagikan ke operator baru atau disimpan oleh koordinator.</p>
+    </section>
+
+    <section class="section" aria-labelledby="install-title">
+      <h2 id="install-title">Panduan Pemasangan</h2>
+      <p>Ikuti langkah berikut setelah file installer selesai diunduh.</p>
+      <div class="steps">
+        <article class="step">
+          <div class="step-num">1</div>
+          <h3>Unduh installer</h3>
+          <p>Klik tombol <strong>Unduh Sekarang</strong>. File <code>SIGAP-Setup.exe</code> akan tersimpan di folder Downloads.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">2</div>
+          <h3>Jalankan file</h3>
+          <p>Buka file dengan klik dua kali. Jika Windows menampilkan peringatan, pilih opsi untuk tetap menjalankan.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">3</div>
+          <h3>Pilih lokasi</h3>
+          <p>Ikuti panduan installer. Lokasi pemasangan bisa memakai bawaan atau folder lain sesuai kebutuhan satker.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">4</div>
+          <h3>Selesai</h3>
+          <p>Buka SIGAP dari Desktop atau Start Menu. Aplikasi dapat digunakan tanpa koneksi internet.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="notice notice-amber" aria-labelledby="offline-title">
+      <div class="notice-icon" aria-hidden="true">i</div>
+      <div>
+        <strong id="offline-title">PC operator tidak terhubung internet?</strong>
+        <p>Koordinator dapat mengunduh installer dari PC yang memiliki internet, lalu membawa file melalui flashdisk.</p>
+        <div class="offline-list">
+          <div><b>1</b><span>Unduh <code>SIGAP-Setup.exe</code> dari halaman ini.</span></div>
+          <div><b>2</b><span>Salin file installer ke flashdisk.</span></div>
+          <div><b>3</b><span>Jalankan installer di PC operator.</span></div>
+          <div><b>4</b><span>Untuk pembaruan manual berikutnya, gunakan menu pengaturan aplikasi jika tersedia.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="notice notice-blue" aria-labelledby="update-title">
+      <div class="notice-icon" aria-hidden="true">u</div>
+      <div>
+        <strong id="update-title">Pembaruan otomatis setelah aplikasi terpasang</strong>
+        <p>Jika PC memiliki internet, SIGAP akan mengecek rilis terbaru di latar belakang. Operator tetap harus menyetujui proses unduh dan pemasangan, sehingga tidak ada perubahan diam-diam.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div>SIGAP - Sistem Integrasi Gaji dan Penghasilan Pegawai</div>
+      <div>Versi <span id="footer-version">-</span> - <span id="footer-date">Belum dimuat</span></div>
+      <div style="margin-top:6px;opacity:.72">Halaman ini hanya memuat installer dan metadata rilis. Data pengguna tetap tersimpan di komputer masing-masing.</div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const GITHUB_OWNER = "Bulu507";
+    const GITHUB_REPO = "sigap-download";
+    const EXE_NAME = "SIGAP-Setup";
+
+    const API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
+    const PERMANENT_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest/download/${EXE_NAME}.exe`;
+
+    const el = (id) => document.getElementById(id);
+    el("permanent-url").textContent = PERMANENT_URL;
+    el("btn-download").href = PERMANENT_URL;
+
+    function showToast(message) {
+      const toast = el("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 2400);
+    }
+
+    function copyText(text, message) {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(text).then(() => showToast(message));
+    }
+
+    function copyUrl() {
+      copyText(PERMANENT_URL, "URL unduhan disalin");
+    }
+
+    function copyChecksum() {
+      const value = el("checksum").textContent;
+      if (value && value !== "-") copyText(value, "Checksum disalin");
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return "-";
+      const mb = bytes / 1024 / 1024;
+      return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return "-";
+      return new Date(iso).toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+
+    function setVersion(version) {
+      el("nav-version").textContent = version ? `v${version}` : "Belum ada rilis";
+      el("version-tag").textContent = version ? `v${version}` : "v-";
+      el("footer-version").textContent = version || "-";
+    }
+
+    async function loadLatestYml(assetUrl) {
+      if (!assetUrl) return null;
+      const response = await fetch(assetUrl);
+      if (!response.ok) return null;
+      const text = await response.text();
+      const match = text.match(/sha512:\s*([A-Za-z0-9+/=]+)/);
+      return match ? match[1] : null;
+    }
+
+    async function loadRelease() {
+      try {
+        const response = await fetch(API_URL, { headers: { Accept: "application/vnd.github+json" } });
+        if (!response.ok) throw new Error("Release belum tersedia");
+        const release = await response.json();
+        const version = String(release.tag_name || "").replace(/^v/i, "");
+        const assets = Array.isArray(release.assets) ? release.assets : [];
+        const exeAsset = assets.find((asset) => /\.exe$/i.test(asset.name) && !/blockmap$/i.test(asset.name));
+        const ymlAsset = assets.find((asset) => /latest\.ya?ml$/i.test(asset.name));
+
+        setVersion(version);
+        el("release-date").textContent = `Dirilis ${formatDate(release.published_at)}`;
+        el("footer-date").textContent = formatDate(release.published_at);
+
+        if (exeAsset) {
+          el("file-size").textContent = formatBytes(exeAsset.size);
+          el("btn-download").href = exeAsset.browser_download_url;
+        } else {
+          el("file-size").textContent = "Installer belum ditemukan";
+        }
+
+        const checksum = await loadLatestYml(ymlAsset && ymlAsset.browser_download_url);
+        el("checksum").textContent = checksum || "Lihat latest.yml";
+        el("checksum").title = checksum || "Checksum tersedia di aset latest.yml";
+      } catch (error) {
+        setVersion(null);
+        el("file-size").textContent = "Gunakan URL permanen setelah rilis tersedia";
+        el("release-date").textContent = "Release GitHub belum dapat dimuat";
+        el("footer-date").textContent = "Belum dimuat";
+        el("checksum").textContent = "-";
+      }
+    }
+
+    el("checksum").addEventListener("click", copyChecksum);
+    loadRelease();
+  </script>
+</body>
+</html>
