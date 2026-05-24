@@ -535,7 +535,7 @@
     <section class="hero">
       <div class="eyebrow">Sistem Integrasi Gaji dan Penghasilan Pegawai</div>
       <h1>Unduh <span>SIGAP</span><br />untuk Windows</h1>
-      <p>Aplikasi pengelolaan data gaji dan dokumen penghasilan pegawai yang berjalan lokal, bisa digunakan offline, dan dapat diperbarui lewat GitHub Releases.</p>
+      <p>Aplikasi payroll offline-first untuk mengolah data sumber, konsolidasi penghasilan, potongan, dan generator dokumen. Installer dan pembaruan tersedia melalui repo distribusi publik, sementara kode aplikasi tetap terlindungi.</p>
     </section>
 
     <section class="download-card" aria-labelledby="download-title">
@@ -553,15 +553,15 @@
             <span class="tag" id="version-tag">v-.--.--</span>
             <span>Windows 10 / 11</span>
             <span>64-bit</span>
-            <span id="file-size">Memuat...</span>
+            <span id="file-size">Siap diunduh</span>
           </div>
         </div>
         <a id="btn-download" class="button button-primary" href="#" download>Unduh Sekarang</a>
       </div>
       <div class="download-foot">
-        <span>Installer resmi rilis GitHub</span>
-        <span>Update aplikasi tidak menyentuh data lokal</span>
-        <span id="release-date">Tanggal rilis belum dimuat</span>
+        <span>Installer resmi SIGAP</span>
+        <span>Kode sumber tetap di repo private</span>
+        <span id="release-date">Mengecek versi terbaru...</span>
         <div class="checksum">
           SHA-512: <span class="checksum-value" id="checksum" title="Klik untuk menyalin">-</span>
           <button class="copy" type="button" onclick="copyChecksum()">Salin</button>
@@ -575,7 +575,7 @@
         <span id="permanent-url"></span>
         <button class="copy" type="button" onclick="copyUrl()">Salin URL</button>
       </div>
-      <p class="hint">URL ini selalu mengarah ke aset installer terbaru. Cocok dibagikan ke operator baru atau disimpan oleh koordinator.</p>
+      <p class="hint">URL ini selalu mengarah ke installer terbaru. Cocok dibagikan ke operator baru, disimpan oleh koordinator, atau disalin ke flashdisk untuk PC offline.</p>
     </section>
 
     <section class="section" aria-labelledby="install-title">
@@ -600,7 +600,7 @@
         <article class="step">
           <div class="step-num">4</div>
           <h3>Selesai</h3>
-          <p>Buka SIGAP dari Desktop atau Start Menu. Aplikasi dapat digunakan tanpa koneksi internet.</p>
+          <p>Buka SIGAP dari Desktop atau Start Menu. Aplikasi menyimpan data lokal dan dapat digunakan tanpa koneksi internet.</p>
         </article>
       </div>
     </section>
@@ -609,12 +609,12 @@
       <div class="notice-icon" aria-hidden="true">i</div>
       <div>
         <strong id="offline-title">PC operator tidak terhubung internet?</strong>
-        <p>Koordinator dapat mengunduh installer dari PC yang memiliki internet, lalu membawa file melalui flashdisk.</p>
+        <p>Koordinator dapat mengunduh installer dari PC yang memiliki internet, lalu membawa file melalui flashdisk ke PC operator.</p>
         <div class="offline-list">
           <div><b>1</b><span>Unduh <code>SIGAP-Setup.exe</code> dari halaman ini.</span></div>
           <div><b>2</b><span>Salin file installer ke flashdisk.</span></div>
           <div><b>3</b><span>Jalankan installer di PC operator.</span></div>
-          <div><b>4</b><span>Untuk pembaruan manual berikutnya, gunakan menu pengaturan aplikasi jika tersedia.</span></div>
+          <div><b>4</b><span>Untuk pembaruan manual berikutnya, unduh installer terbaru dari halaman ini dan jalankan kembali di PC operator.</span></div>
         </div>
       </div>
     </section>
@@ -623,7 +623,7 @@
       <div class="notice-icon" aria-hidden="true">u</div>
       <div>
         <strong id="update-title">Pembaruan otomatis setelah aplikasi terpasang</strong>
-        <p>Jika PC memiliki internet, SIGAP akan mengecek rilis terbaru di latar belakang. Operator tetap harus menyetujui proses unduh dan pemasangan, sehingga tidak ada perubahan diam-diam.</p>
+        <p>Jika PC memiliki internet, SIGAP akan mengecek rilis terbaru dari repo distribusi publik. Operator tetap harus menyetujui proses unduh dan pemasangan, sehingga tidak ada perubahan diam-diam.</p>
       </div>
     </section>
   </main>
@@ -648,8 +648,7 @@
 
     const el = (id) => document.getElementById(id);
     el("permanent-url").textContent = PERMANENT_URL;
-    el("btn-download").href = "#";
-    el("btn-download").setAttribute("aria-disabled", "true");
+    el("btn-download").href = PERMANENT_URL;
 
     function setDownloadEnabled(url) {
       const button = el("btn-download");
@@ -658,11 +657,11 @@
       button.textContent = "Unduh Sekarang";
     }
 
-    function setDownloadDisabled(message) {
+    function setDownloadFallback() {
       const button = el("btn-download");
-      button.href = "#";
-      button.setAttribute("aria-disabled", "true");
-      button.textContent = message;
+      button.href = PERMANENT_URL;
+      button.removeAttribute("aria-disabled");
+      button.textContent = "Unduh Sekarang";
     }
 
     function showToast(message) {
@@ -734,8 +733,8 @@
           el("file-size").textContent = formatBytes(exeAsset.size);
           setDownloadEnabled(exeAsset.browser_download_url);
         } else {
-          el("file-size").textContent = "Installer belum ditemukan";
-          setDownloadDisabled("Installer Belum Tersedia");
+          el("file-size").textContent = "Installer terbaru tersedia lewat URL permanen";
+          setDownloadFallback();
         }
 
         const checksum = await loadLatestYml(ymlAsset && ymlAsset.browser_download_url);
@@ -743,11 +742,11 @@
         el("checksum").title = checksum || "Checksum tersedia di aset latest.yml";
       } catch (error) {
         setVersion(null);
-        el("file-size").textContent = "Release publik belum tersedia";
-        el("release-date").textContent = "Release GitHub belum dapat dimuat";
+        el("file-size").textContent = "Gunakan URL permanen";
+        el("release-date").textContent = "Info versi belum dapat dimuat, tombol unduh tetap mengarah ke rilis terbaru";
         el("footer-date").textContent = "Belum dimuat";
         el("checksum").textContent = "-";
-        setDownloadDisabled("Release Belum Tersedia");
+        setDownloadFallback();
       }
     }
 
