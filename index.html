@@ -255,6 +255,15 @@
 
     .button-primary:hover { background: var(--green-light); }
 
+    .button[aria-disabled="true"] {
+      background: var(--panel-2);
+      border-color: var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+      pointer-events: none;
+      transform: none;
+    }
+
     .button-ghost {
       background: var(--panel-2);
       border-color: var(--border);
@@ -639,7 +648,22 @@
 
     const el = (id) => document.getElementById(id);
     el("permanent-url").textContent = PERMANENT_URL;
-    el("btn-download").href = PERMANENT_URL;
+    el("btn-download").href = "#";
+    el("btn-download").setAttribute("aria-disabled", "true");
+
+    function setDownloadEnabled(url) {
+      const button = el("btn-download");
+      button.href = url;
+      button.removeAttribute("aria-disabled");
+      button.textContent = "Unduh Sekarang";
+    }
+
+    function setDownloadDisabled(message) {
+      const button = el("btn-download");
+      button.href = "#";
+      button.setAttribute("aria-disabled", "true");
+      button.textContent = message;
+    }
 
     function showToast(message) {
       const toast = el("toast");
@@ -708,9 +732,10 @@
 
         if (exeAsset) {
           el("file-size").textContent = formatBytes(exeAsset.size);
-          el("btn-download").href = exeAsset.browser_download_url;
+          setDownloadEnabled(exeAsset.browser_download_url);
         } else {
           el("file-size").textContent = "Installer belum ditemukan";
+          setDownloadDisabled("Installer Belum Tersedia");
         }
 
         const checksum = await loadLatestYml(ymlAsset && ymlAsset.browser_download_url);
@@ -718,10 +743,11 @@
         el("checksum").title = checksum || "Checksum tersedia di aset latest.yml";
       } catch (error) {
         setVersion(null);
-        el("file-size").textContent = "Gunakan URL permanen setelah rilis tersedia";
+        el("file-size").textContent = "Release publik belum tersedia";
         el("release-date").textContent = "Release GitHub belum dapat dimuat";
         el("footer-date").textContent = "Belum dimuat";
         el("checksum").textContent = "-";
+        setDownloadDisabled("Release Belum Tersedia");
       }
     }
 
