@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unduh SIGAP - Sistem Integrasi Gaji dan Penghasilan Pegawai</title>
+  <title>Unduh SIGAP - Sistem Integrasi Gaji dan Pendapatan Pegawai</title>
+  <link rel="icon" type="image/png" href="./icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -78,12 +79,11 @@
       width: 34px;
       height: 34px;
       border-radius: 9px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      background: var(--green);
-      font-weight: 800;
-      letter-spacing: -.04em;
+      display: block;
+      object-fit: cover;
+      background: #fff;
+      border: 1px solid rgba(148, 163, 184, .28);
+      box-shadow: 0 10px 24px rgba(2, 6, 23, .22);
       flex: 0 0 auto;
     }
 
@@ -189,15 +189,13 @@
       width: 54px;
       height: 54px;
       border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: var(--green-soft);
-      border: 1px solid rgba(46, 160, 67, .3);
-      color: var(--green-light);
+      display: block;
+      object-fit: cover;
+      background: #fff;
+      border: 1px solid rgba(148, 163, 184, .28);
+      box-shadow: 0 12px 28px rgba(2, 6, 23, .26);
       flex: 0 0 auto;
     }
-
-    .download-icon svg { width: 26px; height: 26px; }
 
     .download-title {
       flex: 1;
@@ -525,7 +523,7 @@
 <body>
   <header class="topbar">
     <div class="wrap topbar-inner">
-      <div class="logo" aria-hidden="true">S</div>
+      <img class="logo" src="./icon.png" alt="" aria-hidden="true" />
       <div class="brand">SIGAP <span>/ Unduh Aplikasi</span></div>
       <div class="live"><i aria-hidden="true"></i><span id="nav-version">Memuat...</span></div>
     </div>
@@ -533,26 +531,21 @@
 
   <main class="wrap">
     <section class="hero">
-      <div class="eyebrow">Sistem Integrasi Gaji dan Penghasilan Pegawai</div>
+      <div class="eyebrow">Sistem Integrasi Gaji dan Pendapatan Pegawai</div>
       <h1>Unduh <span>SIGAP</span><br />untuk Windows</h1>
       <p>Aplikasi payroll offline-first untuk mengolah data sumber, konsolidasi penghasilan, potongan, dan generator dokumen. Installer dan pembaruan tersedia melalui repo distribusi publik, sementara kode aplikasi tetap terlindungi.</p>
     </section>
 
     <section class="download-card" aria-labelledby="download-title">
       <div class="download-main">
-        <div class="download-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <path d="M7 10l5 5 5-5" />
-            <path d="M12 15V3" />
-          </svg>
-        </div>
+        <img class="download-icon" src="./icon.png" alt="" aria-hidden="true" />
         <div class="download-title">
           <strong id="download-title">SIGAP untuk Windows</strong>
           <div class="meta">
             <span class="tag" id="version-tag">v-.--.--</span>
             <span>Windows 10 / 11</span>
             <span>64-bit</span>
+            <span>Tidak mendukung Windows 7</span>
             <span id="file-size">Siap diunduh</span>
           </div>
         </div>
@@ -570,12 +563,12 @@
     </section>
 
     <section class="url-card" aria-labelledby="permanent-title">
-      <h2 id="permanent-title">URL Unduhan Permanen</h2>
+      <h2 id="permanent-title">URL Installer Terbaru</h2>
       <div class="url-row">
         <span id="permanent-url"></span>
         <button class="copy" type="button" onclick="copyUrl()">Salin URL</button>
       </div>
-      <p class="hint">URL ini selalu mengarah ke installer terbaru. Cocok dibagikan ke operator baru, disimpan oleh koordinator, atau disalin ke flashdisk untuk PC offline.</p>
+      <p class="hint">URL ini mengikuti asset installer pada release terbaru. Nama file memuat versi agar arsip rilis mudah dilacak.</p>
     </section>
 
     <section class="section" aria-labelledby="install-title">
@@ -585,12 +578,12 @@
         <article class="step">
           <div class="step-num">1</div>
           <h3>Unduh installer</h3>
-          <p>Klik tombol <strong>Unduh Sekarang</strong>. File <code>SIGAP-Setup.exe</code> akan tersimpan di folder Downloads.</p>
+          <p>Klik tombol <strong>Unduh Sekarang</strong>. File seperti <code>SIGAP-Setup-0.1.7.exe</code> akan tersimpan di folder Downloads.</p>
         </article>
         <article class="step">
           <div class="step-num">2</div>
           <h3>Jalankan file</h3>
-          <p>Buka file dengan klik dua kali. Jika Windows menampilkan peringatan, pilih opsi untuk tetap menjalankan.</p>
+          <p>Buka file dengan klik dua kali di Windows 10 atau Windows 11 64-bit. Jika Windows menampilkan peringatan, pilih opsi untuk tetap menjalankan.</p>
         </article>
         <article class="step">
           <div class="step-num">3</div>
@@ -609,9 +602,9 @@
       <div class="notice-icon" aria-hidden="true">i</div>
       <div>
         <strong id="offline-title">PC operator tidak terhubung internet?</strong>
-        <p>Koordinator dapat mengunduh installer dari PC yang memiliki internet, lalu membawa file melalui flashdisk ke PC operator.</p>
+        <p>Koordinator dapat mengunduh installer dari PC yang memiliki internet, lalu membawa file melalui flashdisk ke PC operator Windows 10 atau Windows 11.</p>
         <div class="offline-list">
-          <div><b>1</b><span>Unduh <code>SIGAP-Setup.exe</code> dari halaman ini.</span></div>
+          <div><b>1</b><span>Unduh file <code>SIGAP-Setup-[versi].exe</code> dari halaman ini.</span></div>
           <div><b>2</b><span>Salin file installer ke flashdisk.</span></div>
           <div><b>3</b><span>Jalankan installer di PC operator.</span></div>
           <div><b>4</b><span>Untuk pembaruan manual berikutnya, unduh installer terbaru dari halaman ini dan jalankan kembali di PC operator.</span></div>
@@ -630,7 +623,7 @@
 
   <footer>
     <div class="wrap">
-      <div>SIGAP - Sistem Integrasi Gaji dan Penghasilan Pegawai</div>
+      <div>SIGAP - Sistem Integrasi Gaji dan Pendapatan Pegawai</div>
       <div>Versi <span id="footer-version">-</span> - <span id="footer-date">Belum dimuat</span></div>
       <div style="margin-top:6px;opacity:.72">Halaman ini hanya memuat installer dan metadata rilis. Data pengguna tetap tersimpan di komputer masing-masing.</div>
     </div>
@@ -641,27 +634,27 @@
   <script>
     const GITHUB_OWNER = "Bulu507";
     const GITHUB_REPO = "sigap-download";
-    const EXE_NAME = "SIGAP-Setup";
-
     const API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
-    const PERMANENT_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest/download/${EXE_NAME}.exe`;
+    const LATEST_RELEASE_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
 
     const el = (id) => document.getElementById(id);
-    el("permanent-url").textContent = PERMANENT_URL;
-    el("btn-download").href = PERMANENT_URL;
+    el("permanent-url").textContent = LATEST_RELEASE_URL;
+    el("btn-download").href = LATEST_RELEASE_URL;
 
     function setDownloadEnabled(url) {
       const button = el("btn-download");
       button.href = url;
+      el("permanent-url").textContent = url;
       button.removeAttribute("aria-disabled");
       button.textContent = "Unduh Sekarang";
     }
 
     function setDownloadFallback() {
       const button = el("btn-download");
-      button.href = PERMANENT_URL;
+      button.href = LATEST_RELEASE_URL;
+      el("permanent-url").textContent = LATEST_RELEASE_URL;
       button.removeAttribute("aria-disabled");
-      button.textContent = "Unduh Sekarang";
+      button.textContent = "Buka Release Terbaru";
     }
 
     function showToast(message) {
@@ -677,7 +670,7 @@
     }
 
     function copyUrl() {
-      copyText(PERMANENT_URL, "URL unduhan disalin");
+      copyText(el("permanent-url").textContent, "URL unduhan disalin");
     }
 
     function copyChecksum() {
