@@ -575,7 +575,7 @@
         <div class="download-title">
           <strong id="download-title">SIGAP untuk Windows</strong>
           <div class="meta">
-            <span class="tag" id="version-tag">v-.--.--</span>
+            <span class="tag" id="version-tag">v0.1.7</span>
             <span>Windows 10 / 11</span>
             <span>64-bit</span>
             <span>Tidak mendukung Windows 7</span>
@@ -667,12 +667,16 @@
   <script>
     const GITHUB_OWNER = "Bulu507";
     const GITHUB_REPO = "sigap-download";
+    const FALLBACK_VERSION = "0.1.7";
+    const FALLBACK_INSTALLER_NAME = `SIGAP-Setup-${FALLBACK_VERSION}.exe`;
     const API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
     const LATEST_RELEASE_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
+    const FALLBACK_INSTALLER_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest/download/${FALLBACK_INSTALLER_NAME}`;
 
     const el = (id) => document.getElementById(id);
-    el("permanent-url").textContent = LATEST_RELEASE_URL;
-    el("btn-download").href = LATEST_RELEASE_URL;
+    setVersion(FALLBACK_VERSION);
+    el("permanent-url").textContent = FALLBACK_INSTALLER_URL;
+    el("btn-download").href = FALLBACK_INSTALLER_URL;
 
     function setDownloadEnabled(url) {
       const button = el("btn-download");
@@ -684,10 +688,10 @@
 
     function setDownloadFallback() {
       const button = el("btn-download");
-      button.href = LATEST_RELEASE_URL;
-      el("permanent-url").textContent = LATEST_RELEASE_URL;
+      button.href = FALLBACK_INSTALLER_URL;
+      el("permanent-url").textContent = FALLBACK_INSTALLER_URL;
       button.removeAttribute("aria-disabled");
-      button.textContent = "Buka Release Terbaru";
+      button.textContent = "Unduh v" + FALLBACK_VERSION;
     }
 
     function showToast(message) {
@@ -727,9 +731,10 @@
     }
 
     function setVersion(version) {
-      el("nav-version").textContent = version ? `v${version}` : "Belum ada rilis";
-      el("version-tag").textContent = version ? `v${version}` : "v-";
-      el("footer-version").textContent = version || "-";
+      const resolvedVersion = version || FALLBACK_VERSION;
+      el("nav-version").textContent = `v${resolvedVersion}`;
+      el("version-tag").textContent = `v${resolvedVersion}`;
+      el("footer-version").textContent = resolvedVersion;
     }
 
     async function loadLatestYml(assetUrl) {
@@ -767,9 +772,9 @@
         el("checksum").textContent = checksum || "Lihat latest.yml";
         el("checksum").title = checksum || "Checksum tersedia di aset latest.yml";
       } catch (error) {
-        setVersion(null);
-        el("file-size").textContent = "Gunakan URL permanen";
-        el("release-date").textContent = "Info versi belum dapat dimuat, tombol unduh tetap mengarah ke rilis terbaru";
+        setVersion(FALLBACK_VERSION);
+        el("file-size").textContent = FALLBACK_INSTALLER_NAME;
+        el("release-date").textContent = "Metadata release belum dapat dimuat, tombol unduh memakai URL installer permanen";
         el("footer-date").textContent = "Belum dimuat";
         el("checksum").textContent = "-";
         setDownloadFallback();
