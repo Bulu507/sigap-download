@@ -7,89 +7,84 @@
   <link rel="icon" type="image/png" href="./icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0d1117;
-      --panel: #161b22;
-      --panel-2: #21262d;
-      --border: #30363d;
-      --text: #e6edf3;
-      --muted: #8b949e;
-      --green: #2ea043;
-      --green-light: #3fb950;
-      --green-soft: #0d2818;
-      --blue: #1f6feb;
-      --blue-soft: #0c1929;
-      --amber: #d29922;
-      --amber-soft: #272115;
+      --bg: #f3f6fa;
+      --surface: #ffffff;
+      --surface-muted: #f8fafc;
+      --navy: #0b2a45;
+      --navy-strong: #082236;
+      --slate: #475569;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --border-soft: #e2e8f0;
+      --green: #15803d;
+      --green-soft: #dcfce7;
+      --green-border: #86efac;
+      --amber: #b45309;
+      --amber-soft: #fffbeb;
+      --amber-border: #fcd34d;
+      --blue-soft: #eff6ff;
+      --blue-border: #bfdbfe;
+      --text: #0f172a;
       --mono: "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
-      --sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --radius: 12px;
+      --sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --radius: 8px;
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(ellipse 80% 48% at 50% -10%, rgba(46, 160, 67, .13), transparent 60%),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
       font-family: var(--sans);
       font-size: 15px;
       line-height: 1.6;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .38;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 40L40 0M-5 5L5 -5M35 45L45 35' stroke='%2330363d' stroke-width='.45'/%3E%3C/svg%3E");
+      -webkit-font-smoothing: antialiased;
     }
 
     a { color: inherit; }
 
     .wrap {
-      position: relative;
-      z-index: 1;
-      width: min(920px, calc(100% - 48px));
+      width: min(1120px, calc(100% - 48px));
       margin: 0 auto;
     }
 
     .topbar {
       border-bottom: 1px solid var(--border);
-      background: rgba(13, 17, 23, .72);
-      backdrop-filter: blur(10px);
+      background: var(--surface);
     }
 
     .topbar-inner {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 16px 0;
+      padding: 14px 0;
     }
 
-    .logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
+    .logo,
+    .download-icon {
       display: block;
       object-fit: cover;
       background: #fff;
-      border: 1px solid rgba(148, 163, 184, .28);
-      box-shadow: 0 10px 24px rgba(2, 6, 23, .22);
+      border: 1px solid rgba(148, 163, 184, .32);
       flex: 0 0 auto;
     }
 
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .08);
+    }
+
     .brand {
-      font-weight: 700;
-      letter-spacing: -.02em;
+      font-weight: 800;
+      color: var(--navy);
     }
 
     .brand span {
@@ -97,104 +92,146 @@
       font-weight: 500;
     }
 
-    .live {
+    .version-pill {
       margin-left: auto;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      border: 1px solid rgba(46, 160, 67, .35);
+      border: 1px solid var(--green-border);
       background: var(--green-soft);
-      color: var(--green-light);
-      border-radius: 999px;
-      padding: 4px 11px;
-      font-family: var(--mono);
+      color: var(--green);
+      border-radius: 6px;
+      padding: 5px 10px;
       font-size: 12px;
+      font-weight: 700;
     }
 
-    .live i {
+    .version-pill i {
       width: 7px;
       height: 7px;
       border-radius: 999px;
-      background: var(--green-light);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: .45; transform: scale(.78); }
+      background: var(--green);
     }
 
     .hero {
-      padding: 72px 0 54px;
-      text-align: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr);
+      gap: 32px;
+      align-items: stretch;
+      padding: 44px 0 28px;
+    }
+
+    .hero-main,
+    .hero-aside,
+    .download-card,
+    .url-card,
+    .step,
+    .notice {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+    }
+
+    .hero-main {
+      padding: 32px;
+    }
+
+    .hero-aside {
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      padding: 28px;
+      background: var(--navy);
+      color: #fff;
     }
 
     .eyebrow {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 26px;
+      margin-bottom: 18px;
       border: 1px solid var(--border);
-      border-radius: 999px;
-      background: var(--panel);
-      color: var(--muted);
-      padding: 5px 14px;
-      font-family: var(--mono);
+      border-radius: 6px;
+      background: var(--surface-muted);
+      color: var(--slate);
+      padding: 5px 10px;
       font-size: 12px;
+      font-weight: 700;
     }
 
     .hero h1 {
       margin: 0;
-      font-size: clamp(34px, 6vw, 54px);
-      line-height: 1.08;
-      letter-spacing: -.045em;
+      max-width: 760px;
+      color: var(--navy);
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.12;
+      letter-spacing: 0;
     }
 
-    .hero h1 span { color: var(--green-light); }
+    .hero h1 span { color: var(--green); }
 
     .hero p {
-      max-width: 590px;
-      margin: 20px auto 0;
-      color: var(--muted);
+      max-width: 760px;
+      margin: 16px 0 0;
+      color: var(--slate);
       font-size: 16px;
     }
 
-    .download-card,
-    .info-card,
-    .notice,
-    .url-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--panel);
+    .aside-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .aside-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #dbeafe;
+      font-size: 13px;
+    }
+
+    .aside-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .aside-list b {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .12);
+      color: #fff;
+      font-size: 12px;
     }
 
     .download-card {
       overflow: hidden;
-      transition: border-color .18s ease, transform .18s ease;
+      transition: border-color .18s ease, box-shadow .18s ease;
     }
 
     .download-card:hover {
-      border-color: rgba(63, 185, 80, .72);
-      transform: translateY(-1px);
+      border-color: #94a3b8;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, .08);
     }
 
     .download-main {
       display: flex;
       align-items: center;
       gap: 22px;
-      padding: 26px 30px;
+      padding: 24px;
     }
 
     .download-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 14px;
-      display: block;
-      object-fit: cover;
-      background: #fff;
-      border: 1px solid rgba(148, 163, 184, .28);
-      box-shadow: 0 12px 28px rgba(2, 6, 23, .26);
-      flex: 0 0 auto;
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, .12);
     }
 
     .download-title {
@@ -205,23 +242,24 @@
     .download-title strong {
       display: block;
       margin-bottom: 5px;
+      color: var(--navy);
       font-size: 18px;
     }
 
     .meta {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
       color: var(--muted);
       font-size: 13px;
     }
 
     .tag {
-      border: 1px solid rgba(31, 111, 235, .35);
+      border: 1px solid var(--blue-border);
       background: var(--blue-soft);
-      color: #79c0ff;
-      border-radius: 7px;
+      color: var(--navy);
+      border-radius: 6px;
       padding: 2px 8px;
       font-family: var(--mono);
       font-size: 12px;
@@ -231,50 +269,34 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
       border-radius: 8px;
       border: 1px solid transparent;
-      padding: 11px 20px;
+      padding: 11px 18px;
       text-decoration: none;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 14px;
       white-space: nowrap;
       cursor: pointer;
-      transition: background .16s ease, border-color .16s ease, transform .12s ease;
+      transition: background .16s ease, border-color .16s ease, box-shadow .16s ease;
     }
 
-    .button:hover { transform: translateY(-1px); }
-    .button:active { transform: translateY(0); }
+    .button:hover { box-shadow: 0 8px 18px rgba(15, 23, 42, .12); }
 
     .button-primary {
-      background: var(--green);
+      background: var(--navy);
       color: #fff;
     }
 
-    .button-primary:hover { background: var(--green-light); }
-
-    .button[aria-disabled="true"] {
-      background: var(--panel-2);
-      border-color: var(--border);
-      color: var(--muted);
-      cursor: not-allowed;
-      pointer-events: none;
-      transform: none;
-    }
-
-    .button-ghost {
-      background: var(--panel-2);
-      border-color: var(--border);
-      color: var(--text);
-    }
+    .button-primary:hover { background: var(--navy-strong); }
 
     .download-foot {
       display: grid;
       grid-template-columns: repeat(3, auto) minmax(0, 1fr);
       gap: 14px 20px;
       align-items: center;
-      border-top: 1px solid var(--border);
-      padding: 13px 30px;
+      border-top: 1px solid var(--border-soft);
+      background: var(--surface-muted);
+      padding: 13px 24px;
       color: var(--muted);
       font-size: 12px;
     }
@@ -300,24 +322,30 @@
     .copy {
       border: 1px solid var(--border);
       border-radius: 6px;
-      background: var(--panel-2);
-      color: var(--muted);
+      background: var(--surface);
+      color: var(--slate);
       padding: 4px 9px;
       font-family: var(--sans);
       font-size: 11px;
+      font-weight: 700;
       cursor: pointer;
     }
 
-    .copy:hover { color: var(--text); }
+    .copy:hover { color: var(--navy); }
 
     .url-card {
       margin-top: 16px;
       padding: 20px 24px;
     }
 
+    .url-card h2,
+    .section > p,
+    .hint {
+      color: var(--muted);
+    }
+
     .url-card h2 {
       margin: 0 0 12px;
-      color: var(--muted);
       font-size: 13px;
       letter-spacing: .06em;
       text-transform: uppercase;
@@ -328,10 +356,10 @@
       align-items: center;
       gap: 10px;
       border: 1px solid var(--border);
-      border-radius: 9px;
-      background: var(--bg);
+      border-radius: 8px;
+      background: var(--surface-muted);
       padding: 10px 13px;
-      color: #79c0ff;
+      color: var(--navy);
       font-family: var(--mono);
       font-size: 12px;
       overflow-x: auto;
@@ -344,23 +372,21 @@
 
     .hint {
       margin: 10px 0 0;
-      color: var(--muted);
       font-size: 12px;
     }
 
     .section {
-      margin-top: 42px;
+      margin-top: 38px;
     }
 
     .section h2 {
       margin: 0 0 4px;
+      color: var(--navy);
       font-size: 21px;
-      letter-spacing: -.02em;
     }
 
     .section > p {
-      margin: 0 0 20px;
-      color: var(--muted);
+      margin: 0 0 18px;
       font-size: 13px;
     }
 
@@ -372,9 +398,6 @@
 
     .step {
       min-height: 188px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--panel);
       padding: 20px;
     }
 
@@ -384,28 +407,29 @@
       display: grid;
       place-items: center;
       margin-bottom: 14px;
-      border: 1px solid rgba(46, 160, 67, .32);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      background: var(--green-soft);
-      color: var(--green-light);
+      background: var(--surface-muted);
+      color: var(--navy);
       font-weight: 800;
     }
 
     .step h3 {
       margin: 0 0 7px;
+      color: var(--navy);
       font-size: 14px;
     }
 
     .step p {
       margin: 0;
-      color: var(--muted);
+      color: var(--slate);
       font-size: 13px;
       line-height: 1.55;
     }
 
     code {
       border-radius: 4px;
-      background: var(--panel-2);
+      background: var(--surface-muted);
       padding: 1px 5px;
       font-family: var(--mono);
       font-size: 11px;
@@ -421,26 +445,24 @@
     .notice strong {
       display: block;
       margin-bottom: 6px;
+      color: var(--navy);
     }
 
     .notice p {
       margin: 0;
-      color: var(--muted);
+      color: var(--slate);
       font-size: 13px;
     }
 
     .notice-amber {
-      border-color: rgba(210, 153, 34, .28);
+      border-color: var(--amber-border);
       background: var(--amber-soft);
     }
 
     .notice-blue {
-      border-color: rgba(31, 111, 235, .28);
+      border-color: var(--blue-border);
       background: var(--blue-soft);
     }
-
-    .notice-amber p { color: #c9a227; }
-    .notice-blue p { color: #79c0ff; }
 
     .notice-icon {
       width: 34px;
@@ -448,9 +470,11 @@
       flex: 0 0 auto;
       display: grid;
       place-items: center;
-      border-radius: 9px;
-      border: 1px solid rgba(255, 255, 255, .09);
-      background: rgba(255, 255, 255, .04);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--navy);
+      font-weight: 800;
     }
 
     .offline-list {
@@ -469,7 +493,7 @@
       min-width: 24px;
       padding: 0 7px;
       border-radius: 5px;
-      background: rgba(210, 153, 34, .15);
+      background: #fef3c7;
       color: var(--amber);
       text-align: center;
     }
@@ -490,15 +514,16 @@
       z-index: 5;
       transform: translateY(80px);
       opacity: 0;
-      border: 1px solid rgba(46, 160, 67, .55);
-      border-radius: 9px;
-      background: var(--panel);
-      color: var(--green-light);
+      border: 1px solid var(--green-border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--green);
       padding: 10px 16px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       transition: opacity .22s ease, transform .22s ease;
       pointer-events: none;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, .14);
     }
 
     .toast.show {
@@ -506,11 +531,9 @@
       opacity: 1;
     }
 
-    @media (max-width: 760px) {
-      .wrap { width: min(100% - 32px, 920px); }
-      .hero { padding-top: 56px; }
-      .topbar-inner { flex-wrap: wrap; }
-      .live { margin-left: 0; }
+    @media (max-width: 880px) {
+      .wrap { width: min(100% - 32px, 1120px); }
+      .hero { grid-template-columns: 1fr; padding-top: 32px; }
       .download-main { flex-direction: column; align-items: flex-start; }
       .button { width: 100%; }
       .download-foot { grid-template-columns: 1fr; }
@@ -525,15 +548,25 @@
     <div class="wrap topbar-inner">
       <img class="logo" src="./icon.png" alt="" aria-hidden="true" />
       <div class="brand">SIGAP <span>/ Unduh Aplikasi</span></div>
-      <div class="live"><i aria-hidden="true"></i><span id="nav-version">Memuat...</span></div>
+      <div class="version-pill"><i aria-hidden="true"></i><span id="nav-version">Memuat...</span></div>
     </div>
   </header>
 
   <main class="wrap">
     <section class="hero">
-      <div class="eyebrow">Sistem Integrasi Gaji dan Pendapatan Pegawai</div>
-      <h1>Unduh <span>SIGAP</span><br />untuk Windows</h1>
-      <p>Aplikasi payroll offline-first untuk mengolah data sumber, konsolidasi penghasilan, potongan, dan generator dokumen. Installer dan pembaruan tersedia melalui repo distribusi publik, sementara kode aplikasi tetap terlindungi.</p>
+      <div class="hero-main">
+        <div class="eyebrow">Sistem Integrasi Gaji dan Pendapatan Pegawai</div>
+        <h1>Unduh <span>SIGAP</span> untuk Windows</h1>
+        <p>Aplikasi operasional payroll offline-first untuk mengolah data sumber, konsolidasi penghasilan, potongan, dan generator dokumen pegawai.</p>
+      </div>
+      <aside class="hero-aside" aria-label="Ringkasan aplikasi">
+        <h2 class="aside-title">Distribusi Aplikasi</h2>
+        <ul class="aside-list">
+          <li><b>1</b><span>Installer resmi tersedia melalui GitHub Releases.</span></li>
+          <li><b>2</b><span>Data kerja tetap tersimpan lokal di komputer operator.</span></li>
+          <li><b>3</b><span>Kode sumber aplikasi tetap berada di repo private.</span></li>
+        </ul>
+      </aside>
     </section>
 
     <section class="download-card" aria-labelledby="download-title">
@@ -553,7 +586,7 @@
       </div>
       <div class="download-foot">
         <span>Installer resmi SIGAP</span>
-        <span>Kode sumber tetap di repo private</span>
+        <span>Update tidak menghapus data lokal</span>
         <span id="release-date">Mengecek versi terbaru...</span>
         <div class="checksum">
           SHA-512: <span class="checksum-value" id="checksum" title="Klik untuk menyalin">-</span>
@@ -578,22 +611,22 @@
         <article class="step">
           <div class="step-num">1</div>
           <h3>Unduh installer</h3>
-          <p>Klik tombol <strong>Unduh Sekarang</strong>. File seperti <code>SIGAP-Setup-0.1.7.exe</code> akan tersimpan di folder Downloads.</p>
+          <p>Klik tombol <strong>Unduh Sekarang</strong>. File seperti <code>SIGAP-Setup-0.1.7.exe</code> tersimpan di folder Downloads.</p>
         </article>
         <article class="step">
           <div class="step-num">2</div>
           <h3>Jalankan file</h3>
-          <p>Buka file dengan klik dua kali di Windows 10 atau Windows 11 64-bit. Jika Windows menampilkan peringatan, pilih opsi untuk tetap menjalankan.</p>
+          <p>Buka file installer di Windows 10 atau Windows 11 64-bit. Jika muncul peringatan Windows, pilih opsi untuk tetap menjalankan.</p>
         </article>
         <article class="step">
           <div class="step-num">3</div>
-          <h3>Pilih lokasi</h3>
-          <p>Ikuti panduan installer. Lokasi pemasangan bisa memakai bawaan atau folder lain sesuai kebutuhan satker.</p>
+          <h3>Ikuti installer</h3>
+          <p>Pakai lokasi bawaan atau folder lain sesuai kebijakan satker. Proses pemasangan tidak membutuhkan data payroll.</p>
         </article>
         <article class="step">
           <div class="step-num">4</div>
-          <h3>Selesai</h3>
-          <p>Buka SIGAP dari Desktop atau Start Menu. Aplikasi menyimpan data lokal dan dapat digunakan tanpa koneksi internet.</p>
+          <h3>Buka SIGAP</h3>
+          <p>Jalankan dari Desktop atau Start Menu. Aplikasi dapat digunakan tanpa internet setelah terpasang.</p>
         </article>
       </div>
     </section>
@@ -602,12 +635,12 @@
       <div class="notice-icon" aria-hidden="true">i</div>
       <div>
         <strong id="offline-title">PC operator tidak terhubung internet?</strong>
-        <p>Koordinator dapat mengunduh installer dari PC yang memiliki internet, lalu membawa file melalui flashdisk ke PC operator Windows 10 atau Windows 11.</p>
+        <p>Koordinator dapat mengunduh installer dari PC yang memiliki internet, lalu membawa file melalui flashdisk ke PC operator.</p>
         <div class="offline-list">
           <div><b>1</b><span>Unduh file <code>SIGAP-Setup-[versi].exe</code> dari halaman ini.</span></div>
           <div><b>2</b><span>Salin file installer ke flashdisk.</span></div>
           <div><b>3</b><span>Jalankan installer di PC operator.</span></div>
-          <div><b>4</b><span>Untuk pembaruan manual berikutnya, unduh installer terbaru dari halaman ini dan jalankan kembali di PC operator.</span></div>
+          <div><b>4</b><span>Untuk pembaruan manual, unduh installer terbaru lalu jalankan kembali.</span></div>
         </div>
       </div>
     </section>
@@ -616,7 +649,7 @@
       <div class="notice-icon" aria-hidden="true">u</div>
       <div>
         <strong id="update-title">Pembaruan otomatis setelah aplikasi terpasang</strong>
-        <p>Jika PC memiliki internet, SIGAP akan mengecek rilis terbaru dari repo distribusi publik. Operator tetap harus menyetujui proses unduh dan pemasangan, sehingga tidak ada perubahan diam-diam.</p>
+        <p>Jika PC memiliki internet, SIGAP dapat mengecek rilis terbaru dari repo distribusi publik. Operator tetap menyetujui proses unduh dan pemasangan.</p>
       </div>
     </section>
   </main>
@@ -726,7 +759,7 @@
           el("file-size").textContent = formatBytes(exeAsset.size);
           setDownloadEnabled(exeAsset.browser_download_url);
         } else {
-          el("file-size").textContent = "Installer terbaru tersedia lewat URL permanen";
+          el("file-size").textContent = "Installer tersedia lewat halaman release";
           setDownloadFallback();
         }
 
