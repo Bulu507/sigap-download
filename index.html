@@ -575,7 +575,7 @@
         <div class="download-title">
           <strong id="download-title">SIGAP untuk Windows</strong>
           <div class="meta">
-            <span class="tag" id="version-tag">v0.1.8</span>
+          <span class="tag" id="version-tag">v0.1.9</span>
             <span>Windows 10 / 11</span>
             <span>64-bit</span>
             <span>Tidak mendukung Windows 7</span>
@@ -611,7 +611,7 @@
         <article class="step">
           <div class="step-num">1</div>
           <h3>Unduh installer</h3>
-          <p>Klik tombol <strong>Unduh Sekarang</strong>. File seperti <code>SIGAP-Setup-0.1.8.exe</code> tersimpan di folder Downloads.</p>
+          <p>Klik tombol <strong>Unduh Sekarang</strong>. File seperti <code>SIGAP-Setup-[versi].exe</code> tersimpan di folder Downloads.</p>
         </article>
         <article class="step">
           <div class="step-num">2</div>
@@ -667,32 +667,67 @@
   <script>
     const GITHUB_OWNER = "Bulu507";
     const GITHUB_REPO = "sigap-download";
-    const FALLBACK_VERSION = "0.1.8";
-    const FALLBACK_INSTALLER_NAME = `SIGAP-Setup-${FALLBACK_VERSION}.exe`;
-    const API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
-    const LATEST_RELEASE_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
-    const FALLBACK_INSTALLER_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest/download/${FALLBACK_INSTALLER_NAME}`;
+      const FALLBACK_VERSION = "0.1.9";
+      const FALLBACK_INSTALLER_NAME = `SIGAP-Setup-${FALLBACK_VERSION}.exe`;
+      const API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
+      const LATEST_RELEASE_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`;
+      const LATEST_YML_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest/download/latest.yml`;
+      const FALLBACK_INSTALLER_URL = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest/download/${encodeURIComponent(FALLBACK_INSTALLER_NAME)}`;
 
     const el = (id) => document.getElementById(id);
     setVersion(FALLBACK_VERSION);
     el("permanent-url").textContent = FALLBACK_INSTALLER_URL;
     el("btn-download").href = FALLBACK_INSTALLER_URL;
 
-    function setDownloadEnabled(url) {
-      const button = el("btn-download");
-      button.href = url;
-      el("permanent-url").textContent = url;
-      button.removeAttribute("aria-disabled");
-      button.textContent = "Unduh Sekarang";
-    }
+      function buildLatestAssetUrl(fileName) {
+        return `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest/download/${encodeURIComponent(fileName)}`;
+      }
 
-    function setDownloadFallback() {
-      const button = el("btn-download");
-      button.href = FALLBACK_INSTALLER_URL;
-      el("permanent-url").textContent = FALLBACK_INSTALLER_URL;
-      button.removeAttribute("aria-disabled");
-      button.textContent = "Unduh v" + FALLBACK_VERSION;
-    }
+      function setDownloadEnabled(url, version) {
+        const button = el("btn-download");
+        const resolvedVersion = version || el("version-tag").textContent.replace(/^v/i, "") || FALLBACK_VERSION;
+        button.href = url;
+        el("permanent-url").textContent = url;
+        button.removeAttribute("aria-disabled");
+        button.textContent = "Unduh v" + resolvedVersion;
+      }
+
+      function setDownloadFallback() {
+        const button = el("btn-download");
+        button.href = FALLBACK_INSTALLER_URL;
+        el("permanent-url").textContent = FALLBACK_INSTALLER_URL;
+        button.removeAttribute("aria-disabled");
+        button.textContent = "Unduh v" + FALLBACK_VERSION;
+      }
+
+      function readYmlValue(text, key) {
+        const pattern = new RegExp(`^${key}:\\s*["']?([^"'\\r\\n]+)["']?`, "m");
+        const match = text.match(pattern);
+        return match ? match[1].trim() : "";
+      }
+
+      function readLatestYmlFileName(text) {
+        const pathValue = readYmlValue(text, "path");
+        if (pathValue) return pathValue.split(/[\\/]/).pop();
+        const urlValue = readYmlValue(text, "url");
+        if (urlValue) return urlValue.split("/").pop();
+        return "";
+      }
+
+      function parseVersionFromFileName(fileName) {
+        const match = String(fileName || "").match(/SIGAP-Setup-([0-9.]+)\.exe/i);
+        return match ? match[1] : "";
+      }
+
+      function parseLatestYml(text) {
+        const fileName = readLatestYmlFileName(text);
+        return {
+          fileName,
+          version: readYmlValue(text, "version") || parseVersionFromFileName(fileName),
+          sha512: readYmlValue(text, "sha512"),
+          releaseDate: readYmlValue(text, "releaseDate"),
+        };
+      }
 
     function showToast(message) {
       const toast = el("toast");
@@ -737,44 +772,71 @@
       el("footer-version").textContent = resolvedVersion;
     }
 
-    async function loadLatestYml(assetUrl) {
-      if (!assetUrl) return null;
-      const response = await fetch(assetUrl);
-      if (!response.ok) return null;
-      const text = await response.text();
-      const match = text.match(/sha512:\s*([A-Za-z0-9+/=]+)/);
-      return match ? match[1] : null;
-    }
+      async function loadLatestYmlMetadata(assetUrl = LATEST_YML_URL, options = {}) {
+        if (!assetUrl) return false;
+        try {
+          const response = await fetch(assetUrl, { cache: "no-store" });
+          if (!response.ok) return false;
+          const metadata = parseLatestYml(await response.text());
+          if (!metadata.fileName) return false;
 
-    async function loadRelease() {
-      try {
-        const response = await fetch(API_URL, { headers: { Accept: "application/vnd.github+json" } });
-        if (!response.ok) throw new Error("Release belum tersedia");
-        const release = await response.json();
-        const version = String(release.tag_name || "").replace(/^v/i, "");
-        const assets = Array.isArray(release.assets) ? release.assets : [];
-        const exeAsset = assets.find((asset) => /\.exe$/i.test(asset.name) && !/blockmap$/i.test(asset.name));
+          const version = metadata.version || FALLBACK_VERSION;
+          const downloadUrl = buildLatestAssetUrl(metadata.fileName);
+
+          setVersion(version);
+          el("file-size").textContent = metadata.fileName;
+          setDownloadEnabled(downloadUrl, version);
+          el("checksum").textContent = metadata.sha512 || "Lihat latest.yml";
+          el("checksum").title = metadata.sha512 || "Checksum tersedia di aset latest.yml";
+
+          if (metadata.releaseDate && !options.keepReleaseDate) {
+            el("release-date").textContent = `Dirilis ${formatDate(metadata.releaseDate)}`;
+            el("footer-date").textContent = formatDate(metadata.releaseDate);
+          }
+
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      async function loadRelease() {
+        try {
+          const response = await fetch(API_URL, { cache: "no-store", headers: { Accept: "application/vnd.github+json" } });
+          if (!response.ok) throw new Error("Release belum tersedia");
+          const release = await response.json();
+          const version = String(release.tag_name || "").replace(/^v/i, "");
+          const assets = Array.isArray(release.assets) ? release.assets : [];
+          const exeAsset = assets.find((asset) => /\.exe$/i.test(asset.name) && !/blockmap$/i.test(asset.name));
         const ymlAsset = assets.find((asset) => /latest\.ya?ml$/i.test(asset.name));
 
         setVersion(version);
-        el("release-date").textContent = `Dirilis ${formatDate(release.published_at)}`;
-        el("footer-date").textContent = formatDate(release.published_at);
+          el("release-date").textContent = `Dirilis ${formatDate(release.published_at)}`;
+          el("footer-date").textContent = formatDate(release.published_at);
 
-        if (exeAsset) {
-          el("file-size").textContent = formatBytes(exeAsset.size);
-          setDownloadEnabled(exeAsset.browser_download_url);
-        } else {
-          el("file-size").textContent = "Installer tersedia lewat halaman release";
-          setDownloadFallback();
-        }
+          const loadedFromYml = await loadLatestYmlMetadata(ymlAsset && ymlAsset.browser_download_url, { keepReleaseDate: true });
 
-        const checksum = await loadLatestYml(ymlAsset && ymlAsset.browser_download_url);
-        el("checksum").textContent = checksum || "Lihat latest.yml";
-        el("checksum").title = checksum || "Checksum tersedia di aset latest.yml";
-      } catch (error) {
-        setVersion(FALLBACK_VERSION);
-        el("file-size").textContent = FALLBACK_INSTALLER_NAME;
-        el("release-date").textContent = "Metadata release belum dapat dimuat, tombol unduh memakai URL installer permanen";
+          if (exeAsset && !loadedFromYml) {
+            el("file-size").textContent = `${exeAsset.name} - ${formatBytes(exeAsset.size)}`;
+            setDownloadEnabled(exeAsset.browser_download_url, version);
+          }
+
+          if (!exeAsset && !loadedFromYml) {
+            el("file-size").textContent = "Installer tersedia lewat halaman release";
+            setDownloadFallback();
+          }
+
+          if (!loadedFromYml) {
+            el("checksum").textContent = "Lihat latest.yml";
+            el("checksum").title = "Checksum tersedia di aset latest.yml";
+          }
+        } catch (error) {
+          const loadedFromYml = await loadLatestYmlMetadata();
+          if (loadedFromYml) return;
+
+          setVersion(FALLBACK_VERSION);
+          el("file-size").textContent = FALLBACK_INSTALLER_NAME;
+          el("release-date").textContent = "Metadata release belum dapat dimuat, tombol unduh memakai URL installer permanen";
         el("footer-date").textContent = "Belum dimuat";
         el("checksum").textContent = "-";
         setDownloadFallback();
